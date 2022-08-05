@@ -2,7 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import CreateAPIView
-from .serializer import RegisterUserSerializer, RegisterOperatorSerializer, LoginSerializer
+from .serializer import (
+    RegisterUserSerializer, RegisterOperatorSerializer, LoginSerializer,
+    ForgotPasswordSerializer, VerifyForgotPasswordSerializer,
+    ConfirmForgotPasswordSerializer
+)
 from .models import User
 from .permissions import IsSuperuser
 from .utils import get_tokens_for_user
@@ -51,3 +55,35 @@ class Login(APIView):
             else:
                 message = {'message': 'Your password is incorrect'}
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ForgotPassword(APIView):
+    def post(self, request):
+        serializer = ForgotPasswordSerializer(
+            data=request.data, context={'request': request}
+        )
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)
+
+
+class VerifyForgotPassword(APIView):
+    def post(self, request):
+        serializer = VerifyForgotPasswordSerializer(
+            data=request.data, context={'request': request}
+        )
+        if serializer.is_valid(raise_exception=True):
+            status, message = serializer.save()
+            if status:
+                return Response(message, status=status.HTTP_200_OK)
+            return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ConfirmForgotPassword(APIView):
+    def post(self, request):
+        serializer = ConfirmForgotPasswordSerializer(
+            data=request.data, context={'request': request}
+        )
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(status=status.HTTP_200_OK)

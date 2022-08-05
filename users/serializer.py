@@ -41,3 +41,14 @@ class RegisterOperatorSerializer(serializers.Serializer):
         user.api_key = uuid.uuid4().hex
         user.save()
         return user
+
+
+class LoginSerializer(serializers.Serializer):
+    phone_number = serializers.CharField(max_length=13)
+    password = serializers.CharField(max_length=20)
+
+    def validate_phone_number(self, value):
+        if not User.objects.filter(phone_number=value).exists():
+            raise serializers.ValidationError(
+                'User with this phonenumber is not exists')
+        return value

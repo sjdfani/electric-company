@@ -118,6 +118,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+AUTH_USER_MODEL = 'users.User'
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -155,6 +157,9 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=env('ACCESS_TOKEN_LIFETIME', cast=int)),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=env('REFRESH_TOKEN_LIFETIME', cast=int)),
 }
+
+Redis_object = redis.Redis(host='redis', port=6379, db=0, password=env(
+    'REDIS_PASSWORD'), decode_responses=True)
 
 PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
 

@@ -89,12 +89,12 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
     def process(self, validated_data):
         phone_number = validated_data['phone_number']
         code = validated_data['code']
-        redis_code = Redis_object.get(phone_number, None)
+        redis_code = Redis_object.get(phone_number)
         if redis_code:
             if redis_code == code:
                 return (True, {'message': 'code is correct'})
             else:
-                return (False, {'message': 'code is not correct'})
+                return (False, {'message': 'code is incorrect'})
         return (False, {'message': 'code is expired'})
 
     def save(self, **kwargs):

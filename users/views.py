@@ -44,7 +44,8 @@ class Login(APIView):
                     }
                     return Response(message, status=status.HTTP_200_OK)
                 else:
-                    message = {'message': 'Your password is incorrect'}
+                    message = {
+                        'message': 'Phone_number or password is incorrect'}
                     return Response(message, status=status.HTTP_400_BAD_REQUEST)
             elif user.check_password(password):
                 message = {
@@ -53,7 +54,7 @@ class Login(APIView):
                 }
                 return Response(message, status=status.HTTP_200_OK)
             else:
-                message = {'message': 'Your password is incorrect'}
+                message = {'message': 'Phone_number or password is incorrect'}
                 return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
 

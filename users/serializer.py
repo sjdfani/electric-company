@@ -13,7 +13,7 @@ class RegisterUserSerializer(serializers.Serializer):
     def validate_phone_number(self, value):
         if User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
-                {'message': 'User with this phone_number already exists'})
+                'User with this phone_number is not exists')
         return value
 
     def create(self, validated_data):
@@ -32,7 +32,7 @@ class RegisterOperatorSerializer(serializers.Serializer):
     def validate_phone_number(self, value):
         if User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
-                {'message': 'User with this phone_number already exists'})
+                'User with this phone_number is not exists')
         return value
 
     def create(self, validated_data):
@@ -52,7 +52,7 @@ class LoginSerializer(serializers.Serializer):
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
-                {'message': 'User with this phone_number is not exists'})
+                'User with this phone_number is not exists')
         return value
 
 
@@ -62,7 +62,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
-                {'message': 'User with this phone_number is not exists'})
+                'User with this phone_number is not exists')
         return value
 
     def process(self, validated_data):
@@ -83,8 +83,7 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
-                {'message': 'User with this phone_number is not exists'})
-        return value
+                'User with this phone_number is not exists')
 
     def process(self, validated_data):
         phone_number = validated_data['phone_number']
@@ -108,7 +107,7 @@ class ConfirmForgotPasswordSerializer(serializers.Serializer):
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
-                {'message': 'User with this phone_number is not exists'})
+                'User with this phone_number is not exists')
         return value
 
     def process(self, validated_data):

@@ -5,7 +5,7 @@ from rest_framework.generics import CreateAPIView
 from .serializer import (
     RegisterUserSerializer, RegisterOperatorSerializer, LoginSerializer,
     ForgotPasswordSerializer, VerifyForgotPasswordSerializer,
-    ConfirmForgotPasswordSerializer
+    ConfirmForgotPasswordSerializer, UserSerializer
 )
 from .models import User
 from .permissions import IsSuperuser
@@ -31,31 +31,52 @@ class Login(APIView):
         if serilaizer.is_valid(raise_exception=True):
             phone_number = serilaizer.validated_data['phone_number']
             password = serilaizer.validated_data['password']
-            user = User.objects.filter(
-                phone_number=phone_number, is_staff=True).first()
-            if not user:
-                user = User.objects.filter(phone_number=phone_number).first()
-                if not user:
-                    message = {'message': 'User not found'}
-                    return Response(message, status=status.HTTP_404_NOT_FOUND)
-                elif user.check_password(password):
-                    message = {
-                        'tokens': get_tokens_for_user(user)
-                    }
-                    return Response(message, status=status.HTTP_200_OK)
-                else:
-                    message = {
-                        'message': 'Phone_number or password is incorrect'}
-                    return Response(message, status=status.HTTP_400_BAD_REQUEST)
-            elif user.check_password(password):
-                message = {
-                    'api_key': user.api_key,
-                    'tokens': get_tokens_for_user(user)
-                }
-                return Response(message, status=status.HTTP_200_OK)
+            user = User.objects.filter(phone_number=phone_number).first()
+            if user:
+                user_data = UserSerializer(user)
+                if user.is_superuser:
+                    if user.check_password(password):
+                        message = {
+                            'role': 'admin',
+                            'user': user_data.data,
+                            'tokens': get_tokens_for_user(user)
+                        }
+                        return Response(message, status=status.HTTP_200_OK)
+                    else:
+                        message = {
+                            'message': 'Phone_number or password is incorrect'
+                        }
+                        return Response(message, status=status.HTTP_400_BAD_REQUEST)
+
+                elif user.is_staff and not user.is_superuser:
+                    if user.check_password(password):
+                        message = {
+                            'role': 'operator',
+                            'user': user_data.data,
+                            'tokens': get_tokens_for_user(user)
+                        }
+                        return Response(message, status=status.HTTP_200_OK)
+                    else:
+                        message = {
+                            'message': 'Phone_number or password is incorrect'
+                        }
+                        return Response(message, status=status.HTTP_400_BAD_REQUEST)
+                elif user.is_active and not (user.is_superuser and user.is_staff):
+                    if user.check_password(password):
+                        message = {
+                            'role': 'user',
+                            'user': user_data.data,
+                            'tokens': get_tokens_for_user(user)
+                        }
+                        return Response(message, status=status.HTTP_200_OK)
+                    else:
+                        message = {
+                            'message': 'Phone_number or password is incorrect'
+                        }
+                        return Response(message, status=status.HTTP_400_BAD_REQUEST)
             else:
-                message = {'message': 'Phone_number or password is incorrect'}
-                return Response(message, status=status.HTTP_400_BAD_REQUEST)
+                message = {'message': 'User not found'}
+                return Response(message, status=status.HTTP_404_NOT_FOUND)
 
 
 class ForgotPassword(APIView):

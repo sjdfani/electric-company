@@ -5,6 +5,12 @@ from prop_project.settings import Redis_object
 from .utils import number_generator
 
 
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        exclude = ['password']
+
+
 class RegisterUserSerializer(serializers.Serializer):
     full_name = serializers.CharField(max_length=200)
     phone_number = serializers.CharField(max_length=13)
@@ -81,6 +87,7 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=6)
 
     def validate_phone_number(self, value):
+        print(f"fuck: {value}")
         if not User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
                 'User with this phone_number is not exists')
@@ -88,7 +95,9 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
     def process(self, validated_data):
         phone_number = validated_data['phone_number']
         code = validated_data['code']
+        print(f"fuckkkkkkkkkkkkkk: {phone_number}")
         redis_code = Redis_object.get(phone_number)
+        print(f"fuckkkkkkkkkkkkkk: {redis_code}")
         if redis_code:
             if redis_code == code:
                 return (True, {'message': 'code is correct'})
@@ -97,6 +106,7 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
         return (False, {'message': 'code is expired'})
 
     def save(self, **kwargs):
+        print(self.validated_data['phone_number'])
         return self.process(self.validated_data)
 
 

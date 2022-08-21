@@ -1,6 +1,10 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
-from .views import PanelAdditionalDocumentViewSet, PanelOperatorViewSet, PanelSuggestionViewSet, PanelTypeOfDamageViewSet, PanelUsersViewSet, PanelDamageReportsViewSet, PanelLoginView
+from .views import (
+    PanelAdditionalDocumentViewSet, PanelOperatorViewSet,
+    PanelSuggestionViewSet, PanelTypeOfDamageViewSet,
+    PanelUsersViewSet, PanelDamageReportsViewSet
+)
 
 router = DefaultRouter()
 router.register('users', PanelUsersViewSet, basename='user')
@@ -12,6 +16,5 @@ router.register('type-of-damages', PanelTypeOfDamageViewSet,
                 basename='type-of-damage')
 router.register('operators', PanelOperatorViewSet, basename='operator')
 router.register('suggestions', PanelSuggestionViewSet, basename='suggestion')
-urlpatterns = [
-    path('login', PanelLoginView.as_view())
-] + router.urls
+
+urlpatterns = router.urls

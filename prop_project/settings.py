@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'users',
     'phonenumber_field',
     # 'panel',
+    'suggestion',
 ]
 
 MIDDLEWARE = [

@@ -17,6 +17,8 @@ class RegisterUserSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=20, write_only=True)
 
     def validate_phone_number(self, value):
+        if len(value) != 13:
+            raise serializers.ValidationError('Invalid phone number')
         if User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
                 'User with this phone_number is not exists')
@@ -36,6 +38,8 @@ class RegisterOperatorSerializer(serializers.Serializer):
     password = serializers.CharField(max_length=20, write_only=True)
 
     def validate_phone_number(self, value):
+        if len(value) != 13:
+            raise serializers.ValidationError('Invalid phone number')
         if User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
                 'User with this phone_number is not exists')

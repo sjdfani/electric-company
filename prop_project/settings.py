@@ -47,9 +47,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'users',
     'phonenumber_field',
-    # 'panel',
     'suggestion',
     'damage',
+    'panel',
 ]
 
 MIDDLEWARE = [

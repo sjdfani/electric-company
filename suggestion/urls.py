@@ -5,5 +5,4 @@ app_name = 'suggestion'
 
 urlpatterns = [
     path('suggestions/', CreateSuggestionView.as_view(), name='create-suggestion')
-
 ]

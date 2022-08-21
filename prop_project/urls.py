@@ -26,4 +26,5 @@ urlpatterns = [
     path('api/v1/users/', include('users.urls')),
     # path('api/v1/panel/', include('panel.urls')),
     path('api/v1/suggestion/', include('suggestion.urls')),
+    path('api/v1/damage/', include('damage.urls')),
 ]

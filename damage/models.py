@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 import uuid
+from users.models import User
 
 
 class Status(models.IntegerChoices):
@@ -22,18 +23,11 @@ class TypeOfDamage(models.Model):
         return self.title
 
 
-class Operator(models.Model):
-    full_name = models.CharField(max_length=200)
-
-    def __str__(self) -> str:
-        return self.full_name
-
-
 class DamageReport(models.Model):
     unique_id = models.CharField(
         default=uuid_hex, max_length=500, editable=False, unique=True)
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE,
-                             related_name='damage_reports', verbose_name=_('User'))
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='user_damage_reports', verbose_name=_('User'))
     billing_id = models.CharField(max_length=100, verbose_name=_('Billing ID'))
     last_bill_image = models.FileField(
         upload_to='images/', verbose_name=_('Last bill image'), blank=True, null=True)
@@ -44,7 +38,7 @@ class DamageReport(models.Model):
     date = models.DateField(verbose_name=_('Date'))
     time = models.TimeField(verbose_name=_('Time'))
     type_of_damage = models.ForeignKey(
-        TypeOfDamage, on_delete=models.SET_NULL, related_name='damage_reports',
+        TypeOfDamage, on_delete=models.SET_NULL, related_name='type_damage_reports',
         blank=True, null=True, verbose_name=_('Type of damage')
     )
     description = models.TextField(verbose_name=_('Description'))
@@ -52,8 +46,8 @@ class DamageReport(models.Model):
     status = models.IntegerField(
         choices=Status.choices, default=Status.TODO, verbose_name=_('Status'))
     operator = models.ForeignKey(
-        Operator, on_delete=models.SET_NULL,
-        related_name='damage_reports', verbose_name=_('Operator'), blank=True, null=True
+        User, on_delete=models.SET_NULL,
+        related_name='damage_reports_operator', verbose_name=_('Operator'), blank=True, null=True
     )
     done_date = models.DateTimeField(
         verbose_name=_('done at'), blank=True, null=True)

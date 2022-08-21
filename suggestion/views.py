@@ -1,3 +1,10 @@
-from django.shortcuts import render
+from rest_framework.generics import CreateAPIView
+from .serializer import SuggestionSerializer
+from .models import Suggestion
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
+
+class CreateSuggestionView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = SuggestionSerializer
+    queryset = Suggestion.objects.all()

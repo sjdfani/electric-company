@@ -47,7 +47,6 @@ class Login(APIView):
                             'message': 'Phone_number or password is incorrect'
                         }
                         return Response(message, status=status.HTTP_400_BAD_REQUEST)
-
                 elif user.is_staff and not user.is_superuser:
                     if user.check_password(password):
                         message = {

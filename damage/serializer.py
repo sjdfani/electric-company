@@ -1,37 +1,28 @@
 from rest_framework import serializers
 from .models import DamageReport, AdditionalDocument, TypeOfDamage
 from users.models import User
-from phonenumber_field.serializerfields import PhoneNumberField
 
 
-# class CreateDamageReportSerializer(serializers.ModelSerializer):
-#     user = CreateUserSerializer()
-#     created_at = serializers.SerializerMethodField()
+class CreateDamageReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DamageReport
+        exclude = ('operator',)
+        read_only_fields = ('created_at',)
 
-#     class Meta:
-#         model = DamageReport
-#         exclude = ('operator',)
-#         read_only_fields = ('created_at',)
-
-#     def create(self, validated_data):
-#         request = self.context['request']
-#         user_data = validated_data.pop('user')
-#         user = User.objects.filter(
-#             phone_number=user_data['phone_number']).first()
-#         if not user:
-#             user = User.objects.create(**user_data)
-#         damage_report = DamageReport.objects.create(
-#             user=user, **validated_data)
-#         damage_docs_names = ['last_bill_image',
-#                              'national_card_image', 'ownership_doc_image']
-#         for name, file in request.FILES.items():
-#             if name not in damage_docs_names:
-#                 AdditionalDocument.objects.create(
-#                     damage_report=damage_report, image=file)
-#         return damage_report
-
-#     def get_created_at(self, obj):
-#         return obj.created_at.timestamp()
+    def create(self, validated_data):
+        request = self.context['request']
+        user_data = validated_data.pop('user')
+        user = User.objects.filter(
+            phone_number=user_data['phone_number']).first()
+        damage_report = DamageReport.objects.create(
+            user=user, **validated_data)
+        damage_docs_names = ['last_bill_image',
+                             'national_card_image', 'ownership_doc_image']
+        for name, file in request.FILES.items():
+            if name not in damage_docs_names:
+                AdditionalDocument.objects.create(
+                    damage_report=damage_report, image=file)
+        return damage_report
 
 
 class TypeOfDamageSerializer(serializers.ModelSerializer):
@@ -45,15 +36,9 @@ class ValidateDamageReportSerializer(serializers.Serializer):
     unique_id = serializers.CharField()
 
 
-# class RetrieveDamageReportSerializer(serializers.ModelSerializer):
-#     operator = RetrieveOperatorSerializer()
-#     type_of_damage = TypeOfDamageSerializer()
-#     user = CreateUserSerializer()
-#     created_at = serializers.SerializerMethodField()
+class RetrieveDamageReportSerializer(serializers.ModelSerializer):
+    type_of_damage = TypeOfDamageSerializer()
 
-#     class Meta:
-#         model = DamageReport
-#         fields = '__all__'
-
-#     def get_created_at(self, obj):
-#         return obj.created_at.timestamp()
+    class Meta:
+        model = DamageReport
+        fields = '__all__'

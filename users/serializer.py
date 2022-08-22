@@ -78,7 +78,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
     def process(self, validated_data):
         phone_number = validated_data['phone_number']
         code = number_generator(6)
-        Redis_object.set(phone_number, code, ex=360)
+        Redis_object.set(phone_number, code, ex=3600)
         # send code to phone_number
         print(f"forgot password code: {code}")
 
@@ -91,7 +91,6 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
     code = serializers.CharField(max_length=6)
 
     def validate_phone_number(self, value):
-        print(f"fuck: {value}")
         if not User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
                 'User with this phone_number is not exists')
@@ -99,9 +98,7 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
     def process(self, validated_data):
         phone_number = validated_data['phone_number']
         code = validated_data['code']
-        print(f"fuckkkkkkkkkkkkkk: {phone_number}")
         redis_code = Redis_object.get(phone_number)
-        print(f"fuckkkkkkkkkkkkkk: {redis_code}")
         if redis_code:
             if redis_code == code:
                 return (True, {'message': 'code is correct'})
@@ -109,8 +106,12 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
                 return (False, {'message': 'code is incorrect'})
         return (False, {'message': 'code is expired'})
 
+    def to_internal_value(self, data):
+        res = super().to_internal_value(data)
+        res['phone_number'] = data['phone_number']
+        return res
+
     def save(self, **kwargs):
-        print(self.validated_data['phone_number'])
         return self.process(self.validated_data)
 
 

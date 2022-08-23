@@ -57,4 +57,4 @@ class PanelTypeOfDamageSerializer(serializers.ModelSerializer):
 class PanelOperatorSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        exclude = ['api_key', 'password']

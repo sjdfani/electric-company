@@ -134,3 +134,10 @@ class ConfirmForgotPasswordSerializer(serializers.Serializer):
 
     def save(self, **kwargs):
         self.process(self.validated_data)
+
+
+class UpdateInformationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['full_name', 'national_code',
+                  'province', 'city', 'postal_code', 'address']

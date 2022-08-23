@@ -1,11 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
+from rest_framework.permissions import IsAuthenticated
 from .serializer import (
     RegisterUserSerializer, RegisterOperatorSerializer, LoginSerializer,
     ForgotPasswordSerializer, VerifyForgotPasswordSerializer,
-    ConfirmForgotPasswordSerializer, UserSerializer
+    ConfirmForgotPasswordSerializer, UserSerializer, UpdateInformationSerializer
 )
 from .models import User
 from .permissions import IsSuperuser
@@ -108,3 +109,15 @@ class ConfirmForgotPassword(APIView):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class UpdateInformationUser(RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return UserSerializer
+        return UpdateInformationSerializer
+
+    def get_queryset(self):
+        return User.objects.filter(phone_number=self.request.user.phone_number)

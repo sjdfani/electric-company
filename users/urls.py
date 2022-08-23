@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (
     RegisterUser, RegisterOperator, Login,
-    ForgotPassword, VerifyForgotPassword, ConfirmForgotPassword
+    ForgotPassword, VerifyForgotPassword, ConfirmForgotPassword,
+    UpdateInformationUser
 )
 
 app_name = 'users'
@@ -13,4 +14,5 @@ urlpatterns = [
     path('forgot-password/', ForgotPassword.as_view()),
     path('verify-forgot-password/', VerifyForgotPassword.as_view()),
     path('confirm-forgot-password/', ConfirmForgotPassword.as_view()),
+    path('update-information/<int:pk>/', UpdateInformationUser.as_view()),
 ]

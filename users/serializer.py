@@ -8,7 +8,7 @@ from .utils import number_generator
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ['password']
+        exclude = ('api_key', 'password')
 
 
 class RegisterUserSerializer(serializers.Serializer):
@@ -21,7 +21,7 @@ class RegisterUserSerializer(serializers.Serializer):
             raise serializers.ValidationError('Invalid phone number')
         if User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
-                'User with this phone_number is not exists')
+                'User with this phone_number is exists')
         return value
 
     def create(self, validated_data):
@@ -42,7 +42,7 @@ class RegisterOperatorSerializer(serializers.Serializer):
             raise serializers.ValidationError('Invalid phone number')
         if User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
-                'User with this phone_number is not exists')
+                'User with this phone_number is exists')
         return value
 
     def create(self, validated_data):
@@ -78,7 +78,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
     def process(self, validated_data):
         phone_number = validated_data['phone_number']
         code = number_generator(6)
-        Redis_object.set(phone_number, code, ex=3600)
+        Redis_object.set(phone_number, code, ex=360)
         # send code to phone_number
         print(f"forgot password code: {code}")
 
@@ -94,6 +94,7 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
         if not User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError(
                 'User with this phone_number is not exists')
+        return value
 
     def process(self, validated_data):
         phone_number = validated_data['phone_number']
@@ -105,11 +106,6 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
             else:
                 return (False, {'message': 'code is incorrect'})
         return (False, {'message': 'code is expired'})
-
-    def to_internal_value(self, data):
-        res = super().to_internal_value(data)
-        res['phone_number'] = data['phone_number']
-        return res
 
     def save(self, **kwargs):
         return self.process(self.validated_data)

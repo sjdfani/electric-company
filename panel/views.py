@@ -1,5 +1,6 @@
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, ListModelMixin
+from rest_framework.permissions import IsAuthenticated
 from users.models import User
 from .serializer import (
     PanelAdditionalDocumentSerializer, PanelDamageReportSerializer,
@@ -21,7 +22,7 @@ class PanelUsersViewSet(ModelViewSet):
 class PanelDamageReportsViewSet(
     GenericViewSet, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, ListModelMixin
 ):
-    permission_classes = [IsAdminOrSuperUser]
+    permission_classes = [IsAuthenticated]
     serializer_class = PanelDamageReportSerializer
     queryset = DamageReport.objects.order_by('-created_at', '-pk')
 

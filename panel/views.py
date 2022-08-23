@@ -19,7 +19,7 @@ class PanelUsersViewSet(ModelViewSet):
 
 
 class PanelDamageReportsViewSet(
-    GenericViewSet, RetrieveModelMixin, DestroyModelMixin, ListModelMixin
+    GenericViewSet, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, ListModelMixin
 ):
     permission_classes = [IsAdminOrSuperUser]
     serializer_class = PanelDamageReportSerializer

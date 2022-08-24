@@ -4,5 +4,5 @@ from .views import CreateSuggestionView
 app_name = 'suggestion'
 
 urlpatterns = [
-    path('suggestions/', CreateSuggestionView.as_view(), name='create-suggestion')
+    path('create/', CreateSuggestionView.as_view(), name='create-suggestion')
 ]

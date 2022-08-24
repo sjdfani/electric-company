@@ -135,5 +135,5 @@ class ConfirmForgotPasswordSerializer(serializers.Serializer):
 class UpdateInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['full_name', 'national_code',
+        fields = ['full_name', 'email', 'national_code',
                   'province', 'city', 'postal_code', 'address']

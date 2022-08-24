@@ -51,6 +51,10 @@ class PanelOperatorViewSet(ModelViewSet):
 class PanelSuggestionViewSet(
     GenericViewSet, RetrieveModelMixin, DestroyModelMixin, ListModelMixin
 ):
-    permission_classes = [IsSuperuser]
+    permission_classes = [IsAuthenticated]
     serializer_class = SuggestionSerializer
-    queryset = Suggestion.objects.order_by('-pk')
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Suggestion.objects.order_by('-pk')
+        return Suggestion.objects.filter(phone_number=self.request.user.phone_number)

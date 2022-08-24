@@ -57,4 +57,4 @@ class PanelSuggestionViewSet(
     def get_queryset(self):
         if self.request.user.is_superuser:
             return Suggestion.objects.order_by('-pk')
-        return Suggestion.objects.filter(user=self.request.user)
+        return Suggestion.objects.filter(user=self.request.user).order_by('-pk')

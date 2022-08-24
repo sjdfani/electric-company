@@ -7,7 +7,7 @@ from .models import Suggestion
 class UserSuggestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'full_name', 'phone_number']
+        fields = ['full_name', 'phone_number']
 
 
 class SuggestionSerializer(serializers.ModelSerializer):

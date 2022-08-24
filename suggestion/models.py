@@ -9,4 +9,4 @@ class Suggestion(models.Model):
     description = models.TextField(verbose_name=_('Description'))
 
     def __str__(self) -> str:
-        return self.user.phone_number
+        return str(self.user.phone_number)

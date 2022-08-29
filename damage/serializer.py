@@ -6,14 +6,12 @@ from users.models import User
 class CreateDamageReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = DamageReport
-        exclude = ('operator',)
+        exclude = ('operator', 'user', 'date_time')
         read_only_fields = ('created_at',)
 
     def create(self, validated_data):
         request = self.context['request']
-        user_data = validated_data.pop('user')
-        user = User.objects.filter(
-            phone_number=user_data['phone_number']).first()
+        user = User.objects.get(phone_number=request.user.phone_number)
         damage_report = DamageReport.objects.create(
             user=user, **validated_data)
         damage_docs_names = ['last_bill_image',

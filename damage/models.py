@@ -35,8 +35,7 @@ class DamageReport(models.Model):
         upload_to='images/', verbose_name=_('National card image'), blank=True, null=True)
     ownership_doc_image = models.FileField(
         upload_to='images/', verbose_name=_('Ownership document image'), blank=True, null=True)
-    date = models.DateField(verbose_name=_('Date'))
-    time = models.TimeField(verbose_name=_('Time'))
+    date_time = models.DateTimeField(verbose_name=_('Date-Time'))
     type_of_damage = models.ForeignKey(
         TypeOfDamage, on_delete=models.SET_NULL, related_name='type_damage_reports',
         blank=True, null=True, verbose_name=_('Type of damage')

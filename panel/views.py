@@ -24,7 +24,14 @@ class PanelDamageReportsViewSet(
 ):
     permission_classes = [IsAuthenticated]
     serializer_class = PanelDamageReportSerializer
-    queryset = DamageReport.objects.order_by('-created_at', '-pk')
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return DamageReport.objects.order_by('-created_at', '-pk')
+        elif self.request.user.is_staff and not self.request.user.is_superuser:
+            return DamageReport.objects.filter(operator=None).order_by('-created_at', '-pk')
+        elif not (self.request.user.is_staff and self.request.user.is_superuser):
+            return DamageReport.objects.filter(user=self.request.user).order_by('-created_at', '-pk')
 
 
 class PanelAdditionalDocumentViewSet(

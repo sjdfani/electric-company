@@ -1,3 +1,9 @@
 from django.contrib import admin
+from .models import DamageReport
 
-# Register your models here.
+
+class DamageReportAdmin(admin.ModelAdmin):
+    list_display = ('user',)
+
+
+admin.site.register(DamageReport, DamageReportAdmin)

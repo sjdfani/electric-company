@@ -10,7 +10,6 @@ class PanelUserSerializer(serializers.ModelSerializer):
 
 
 class PanelDamageReportSerializer(serializers.ModelSerializer):
-    created_at = serializers.SerializerMethodField()
     additional_documents = serializers.SerializerMethodField()
 
     class Meta:
@@ -28,8 +27,12 @@ class PanelDamageReportSerializer(serializers.ModelSerializer):
                     damage_report=damage_report, image=file)
         return damage_report
 
-    def get_created_at(self, obj):
-        return obj.created_at.timestamp()
+    def to_representation(self, instance):
+        request = self.context['request']
+        res = super().to_representation(instance)
+        res['user'] = PanelUserSerializer(
+            instance.user, context={'request': request}).data
+        return res
 
     def get_additional_documents(self, obj):
         request = self.context['request']

@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, ListModelMixin
 from rest_framework.permissions import IsAuthenticated
+from django.db.models import Q
 from users.models import User
 from .serializer import (
     PanelAdditionalDocumentSerializer, PanelDamageReportSerializer,
@@ -29,7 +30,8 @@ class PanelDamageReportsViewSet(
         if self.request.user.is_superuser:
             return DamageReport.objects.order_by('-created_at', '-pk')
         elif self.request.user.is_staff and not self.request.user.is_superuser:
-            return DamageReport.objects.filter(operator=None).order_by('-created_at', '-pk')
+            lookup = Q(operator=None) | Q(operator=self.request.user)
+            return DamageReport.objects.filter(lookup).order_by('-created_at', '-pk')
         elif not (self.request.user.is_staff and self.request.user.is_superuser):
             return DamageReport.objects.filter(user=self.request.user).order_by('-created_at', '-pk')
 

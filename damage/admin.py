@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import DamageReport, TypeOfDamage
+from .models import DamageReport, TypeOfDamage, AdditionalDocument
 
 
 class DamageReportAdmin(admin.ModelAdmin):
@@ -11,5 +11,10 @@ class TypeOfDamageAdmin(admin.ModelAdmin):
     list_display = ('title',)
 
 
+class AdditionalDocumentAdmin(admin.ModelAdmin):
+    list_display = ('damage_report',)
+
+
 admin.site.register(DamageReport, DamageReportAdmin)
 admin.site.register(TypeOfDamage, TypeOfDamageAdmin)
+admin.site.register(AdditionalDocument, AdditionalDocumentAdmin)

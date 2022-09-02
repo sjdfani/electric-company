@@ -39,7 +39,7 @@ class RegisterOperatorSerializer(serializers.Serializer):
 
     def validate_phone_number(self, value):
         if len(value) != 13:
-            raise serializers.ValidationError('Invalid phone number')
+            raise serializers.ValidationError('شماره موبایل نامعتبر است')
         if User.objects.filter(phone_number=value).exists():
             raise serializers.ValidationError('کاربری با این شماره موبایل قبلا ثبت نام کرده است')
         return value

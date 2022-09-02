@@ -8,14 +8,14 @@ from .serializer import (
     PanelOperatorSerializer, PanelTypeOfDamageSerializer,
     PanelUserSerializer
 )
-from .permissions import IsSuperuser, IsAdminOrSuperUser
+from .permissions import IsSuperuser, IsStaffOrSuperuser
 from damage.models import DamageReport, TypeOfDamage, AdditionalDocument
 from suggestion.serializer import SuggestionSerializer
 from suggestion.models import Suggestion
 
 
 class PanelUsersViewSet(ModelViewSet):
-    permission_classes = [IsAdminOrSuperUser]
+    permission_classes = [IsStaffOrSuperuser]
     serializer_class = PanelUserSerializer
     queryset = User.objects.filter(is_staff=False).order_by('-date_joined')
 

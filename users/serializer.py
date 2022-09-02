@@ -21,7 +21,8 @@ class RegisterUserSerializer(serializers.Serializer):
         if len(value) != 13:
             raise serializers.ValidationError('Invalid phone number')
         if User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError('کاربری با این شماره موبایل قبلا ثبت نام کرده است')
+            raise serializers.ValidationError(
+                'کاربری با این شماره موبایل قبلا ثبت نام کرده است')
         return value
 
     def create(self, validated_data):
@@ -41,7 +42,8 @@ class RegisterOperatorSerializer(serializers.Serializer):
         if len(value) != 13:
             raise serializers.ValidationError('شماره موبایل نامعتبر است')
         if User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError('کاربری با این شماره موبایل قبلا ثبت نام کرده است')
+            raise serializers.ValidationError(
+                'کاربری با این شماره موبایل قبلا ثبت نام کرده است')
         return value
 
     def create(self, validated_data):
@@ -53,10 +55,12 @@ class RegisterOperatorSerializer(serializers.Serializer):
         user.save()
         return user
 
+
 class phoneNumberCharField(CharField):
     default_error_messages = {
         'max_length': ('شماره موبایل حداکثر 13 کارکتر می‌باشد.'),
     }
+
 
 class LoginSerializer(serializers.Serializer):
     phone_number = phoneNumberCharField(max_length=13)
@@ -64,7 +68,8 @@ class LoginSerializer(serializers.Serializer):
 
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError('کاربری با این شماره تلفن وجود ندارد')
+            raise serializers.ValidationError(
+                'کاربری با این شماره تلفن وجود ندارد')
         return value
 
 
@@ -73,7 +78,8 @@ class ForgotPasswordSerializer(serializers.Serializer):
 
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError('کاربری با این شماره تلفن وجود ندارد')
+            raise serializers.ValidationError(
+                'کاربری با این شماره تلفن وجود ندارد')
         return value
 
     def process(self, validated_data):
@@ -93,7 +99,8 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
 
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError('کاربری با این شماره تلفن وجود ندارد')
+            raise serializers.ValidationError(
+                'کاربری با این شماره تلفن وجود ندارد')
         return value
 
     def process(self, validated_data):
@@ -117,7 +124,8 @@ class ConfirmForgotPasswordSerializer(serializers.Serializer):
 
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError('کاربری با این شماره تلفن وجود ندارد')
+            raise serializers.ValidationError(
+                'کاربری با این شماره تلفن وجود ندارد')
         return value
 
     def process(self, validated_data):

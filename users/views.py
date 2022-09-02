@@ -45,7 +45,7 @@ class Login(APIView):
                         return Response(message, status=status.HTTP_200_OK)
                     else:
                         message = {
-                            'message': 'Phone_number or password is incorrect'
+                            'message': 'شماره موبایل یا رمز عبور اشتباه است'
                         }
                         return Response(message, status=status.HTTP_400_BAD_REQUEST)
                 elif user.is_staff and not user.is_superuser:
@@ -58,7 +58,7 @@ class Login(APIView):
                         return Response(message, status=status.HTTP_200_OK)
                     else:
                         message = {
-                            'message': 'Phone_number or password is incorrect'
+                            'message': 'شماره موبایل یا رمز عبور اشتباه است'
                         }
                         return Response(message, status=status.HTTP_400_BAD_REQUEST)
                 elif user.is_active and not (user.is_superuser and user.is_staff):
@@ -71,11 +71,11 @@ class Login(APIView):
                         return Response(message, status=status.HTTP_200_OK)
                     else:
                         message = {
-                            'message': 'Phone_number or password is incorrect'
+                            'message': 'شماره موبایل یا رمز عبور اشتباه است'
                         }
                         return Response(message, status=status.HTTP_400_BAD_REQUEST)
             else:
-                message = {'message': 'User not found'}
+                message = {'message': 'کاربری با این شماره موبایل یافت نشد'}
                 return Response(message, status=status.HTTP_404_NOT_FOUND)
 
 

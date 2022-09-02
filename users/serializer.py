@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import User
 import uuid
+from rest_framework.fields import CharField
 from prop_project.settings import Redis_object
 from .utils import number_generator
 
@@ -20,8 +21,7 @@ class RegisterUserSerializer(serializers.Serializer):
         if len(value) != 13:
             raise serializers.ValidationError('Invalid phone number')
         if User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError(
-                'User with this phone_number is exists')
+            raise serializers.ValidationError('کاربری با این شماره موبایل قبلا ثبت نام کرده است')
         return value
 
     def create(self, validated_data):
@@ -41,8 +41,7 @@ class RegisterOperatorSerializer(serializers.Serializer):
         if len(value) != 13:
             raise serializers.ValidationError('Invalid phone number')
         if User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError(
-                'User with this phone_number is exists')
+            raise serializers.ValidationError('کاربری با این شماره موبایل قبلا ثبت نام کرده است')
         return value
 
     def create(self, validated_data):
@@ -54,15 +53,18 @@ class RegisterOperatorSerializer(serializers.Serializer):
         user.save()
         return user
 
+class phoneNumberCharField(CharField):
+    default_error_messages = {
+        'max_length': ('شماره موبایل حداکثر 13 کارکتر می‌باشد.'),
+    }
 
 class LoginSerializer(serializers.Serializer):
-    phone_number = serializers.CharField(max_length=13)
+    phone_number = phoneNumberCharField(max_length=13)
     password = serializers.CharField(max_length=20)
 
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError(
-                'User with this phone_number is not exists')
+            raise serializers.ValidationError('کاربری با این شماره تلفن وجود ندارد')
         return value
 
 
@@ -71,8 +73,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
 
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError(
-                'User with this phone_number is not exists')
+            raise serializers.ValidationError('کاربری با این شماره تلفن وجود ندارد')
         return value
 
     def process(self, validated_data):
@@ -92,8 +93,7 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
 
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError(
-                'User with this phone_number is not exists')
+            raise serializers.ValidationError('کاربری با این شماره تلفن وجود ندارد')
         return value
 
     def process(self, validated_data):
@@ -102,10 +102,10 @@ class VerifyForgotPasswordSerializer(serializers.Serializer):
         redis_code = Redis_object.get(phone_number)
         if redis_code:
             if redis_code == code:
-                return (True, {'message': 'code is correct'})
+                return (True, {'message': 'کد تایید شد'})
             else:
-                return (False, {'message': 'code is incorrect'})
-        return (False, {'message': 'code is expired'})
+                return (False, {'message': 'کد وارد شده صحیح نمی‌باشد'})
+        return (False, {'message': 'کد منقضی شده است'})
 
     def save(self, **kwargs):
         return self.process(self.validated_data)
@@ -117,8 +117,7 @@ class ConfirmForgotPasswordSerializer(serializers.Serializer):
 
     def validate_phone_number(self, value):
         if not User.objects.filter(phone_number=value).exists():
-            raise serializers.ValidationError(
-                'User with this phone_number is not exists')
+            raise serializers.ValidationError('کاربری با این شماره تلفن وجود ندارد')
         return value
 
     def process(self, validated_data):

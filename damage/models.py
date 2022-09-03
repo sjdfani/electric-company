@@ -26,7 +26,8 @@ class TypeOfDamage(models.Model):
 class DamageReport(models.Model):
     unique_id = models.CharField(
         default=uuid_hex, max_length=500, editable=False, unique=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_damage_reports', verbose_name=_('User'))
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='user_damage_reports', verbose_name=_('User'))
     billing_id = models.CharField(max_length=100, verbose_name=_('Billing ID'))
     last_bill_image = models.FileField(
         upload_to='images/', verbose_name=_('Last bill image'), blank=True, null=True)
@@ -34,8 +35,7 @@ class DamageReport(models.Model):
         upload_to='images/', verbose_name=_('National card image'), blank=True, null=True)
     ownership_doc_image = models.FileField(
         upload_to='images/', verbose_name=_('Ownership document image'), blank=True, null=True)
-    date_time = models.DateTimeField(
-        verbose_name=_('Date-Time'))
+    date_time = models.DateTimeField(verbose_name=_('Date-Time'))
     type_of_damage = models.ForeignKey(
         TypeOfDamage, on_delete=models.SET_NULL, related_name='type_damage_reports',
         blank=True, null=True, verbose_name=_('Type of damage')

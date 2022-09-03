@@ -6,7 +6,7 @@ from users.models import User
 class CreateDamageReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = DamageReport
-        exclude = ('operator', 'user', 'date_time')
+        exclude = ('operator', 'user')
         read_only_fields = ('created_at',)
 
     def create(self, validated_data):

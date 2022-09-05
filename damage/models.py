@@ -35,7 +35,8 @@ class DamageReport(models.Model):
         upload_to='images/', verbose_name=_('National card image'), blank=True, null=True)
     ownership_doc_image = models.FileField(
         upload_to='images/', verbose_name=_('Ownership document image'), blank=True, null=True)
-    date_time = models.DateTimeField(verbose_name=_('Date-Time'))
+    created_datetime = models.DateTimeField(
+        auto_now_add=True, verbose_name=_('Created datetime'))
     type_of_damage = models.ForeignKey(
         TypeOfDamage, on_delete=models.SET_NULL, related_name='type_damage_reports',
         blank=True, null=True, verbose_name=_('Type of damage')
@@ -52,8 +53,6 @@ class DamageReport(models.Model):
         verbose_name=_('done at'), blank=True, null=True)
     operator_description = models.TextField(verbose_name=_(
         'Operator_Description'), blank=True, null=True)
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name=_('Created at'), blank=True, null=True)
 
 
 class AdditionalDocument(models.Model):

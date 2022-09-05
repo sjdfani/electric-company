@@ -1,6 +1,7 @@
-from damage.models import DamageReport, AdditionalDocument, TypeOfDamage
+from damage.models import DamageReport, AdditionalDocument, TypeOfDamage, Status
 from rest_framework import serializers
 from users.models import User
+from django.utils import timezone
 
 
 class PanelUserSerializer(serializers.ModelSerializer):
@@ -19,6 +20,9 @@ class PanelDamageReportSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         request = self.context['request']
         damage_report = super().update(instance, validated_data)
+        if damage_report.done_date == None and damage_report.status != Status.TODO:
+            damage_report.done_date = timezone.now()
+            damage_report.save()
         damage_docs_names = ['last_bill_image',
                              'national_card_image', 'ownership_doc_image']
         for name, file in request.FILES.items():

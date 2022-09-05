@@ -3,7 +3,7 @@ from .models import DamageReport, TypeOfDamage, AdditionalDocument
 
 
 class DamageReportAdmin(admin.ModelAdmin):
-    list_display = ('user', 'billing_id', 'date_time', 'done_date')
+    list_display = ('user', 'billing_id', 'created_datetime', 'done_date')
     list_filter = ('user', 'type_of_damage', 'status')
 
 

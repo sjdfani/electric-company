@@ -28,12 +28,12 @@ class PanelDamageReportsViewSet(
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            return DamageReport.objects.order_by('-created_at', '-pk')
+            return DamageReport.objects.order_by('-created_datetime', '-pk')
         elif self.request.user.is_staff and not self.request.user.is_superuser:
             lookup = Q(operator=None) | Q(operator=self.request.user)
-            return DamageReport.objects.filter(lookup).order_by('-created_at', '-pk')
+            return DamageReport.objects.filter(lookup).order_by('-created_datetime', '-pk')
         elif not (self.request.user.is_staff and self.request.user.is_superuser):
-            return DamageReport.objects.filter(user=self.request.user).order_by('-created_at', '-pk')
+            return DamageReport.objects.filter(user=self.request.user).order_by('-created_datetime', '-pk')
 
 
 class PanelAdditionalDocumentViewSet(

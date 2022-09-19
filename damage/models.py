@@ -23,6 +23,11 @@ class TypeOfDamage(models.Model):
         return self.title
 
 
+class Payment_status(models.IntegerChoices):
+    NOT_PAID = (1, _('Not paid'))
+    PAID = (2, _('Paid'))
+
+
 class DamageReport(models.Model):
     unique_id = models.CharField(
         default=uuid_hex, max_length=500, editable=False, unique=True)
@@ -59,13 +64,10 @@ class DamageReport(models.Model):
         'Bank branch'), blank=True, null=True)
     payment_code = models.CharField(max_length=30, verbose_name=_(
         'Payment code'), blank=True, null=True)
-    paid_by = models.ForeignKey(
-        User, on_delete=models.SET_NULL,
-        related_name='damage_reports_paid_user', verbose_name=_('Paid by'),
-        blank=True, null=True
-    )
     paid_date = models.DateTimeField(
         verbose_name=_('Paid at'), blank=True, null=True)
+    payment_status = models.IntegerField(
+        choices=Payment_status.choices, default=Payment_status.NOT_PAID, verbose_name=_('Payment status'))
 
 
 class AdditionalDocument(models.Model):

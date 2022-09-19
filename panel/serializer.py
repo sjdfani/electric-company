@@ -1,4 +1,4 @@
-from damage.models import DamageReport, AdditionalDocument, TypeOfDamage, Status
+from damage.models import DamageReport, AdditionalDocument, TypeOfDamage, Status, Payment_status
 from rest_framework import serializers
 from users.models import User
 from django.utils import timezone
@@ -22,6 +22,9 @@ class PanelDamageReportSerializer(serializers.ModelSerializer):
         damage_report = super().update(instance, validated_data)
         if damage_report.done_date == None and damage_report.status != Status.TODO:
             damage_report.done_date = timezone.now()
+            damage_report.save()
+        if damage_report.paid_date == None and damage_report.payment_status == Payment_status.PAID:
+            damage_report.paid_date = timezone.now()
             damage_report.save()
         damage_docs_names = ['last_bill_image',
                              'national_card_image', 'ownership_doc_image']

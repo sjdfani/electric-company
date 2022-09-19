@@ -53,6 +53,19 @@ class DamageReport(models.Model):
         verbose_name=_('done at'), blank=True, null=True)
     operator_description = models.TextField(verbose_name=_(
         'Operator_Description'), blank=True, null=True)
+    bank_name = models.CharField(max_length=50, verbose_name=_(
+        'Bank name'), blank=True, null=True)
+    bank_branch = models.CharField(max_length=50, verbose_name=_(
+        'Bank branch'), blank=True, null=True)
+    payment_code = models.CharField(max_length=30, verbose_name=_(
+        'Payment code'), blank=True, null=True)
+    paid_by = models.ForeignKey(
+        User, on_delete=models.SET_NULL,
+        related_name='damage_reports_paid_user', verbose_name=_('Paid by'),
+        blank=True, null=True
+    )
+    paid_date = models.DateTimeField(
+        verbose_name=_('Paid at'), blank=True, null=True)
 
 
 class AdditionalDocument(models.Model):

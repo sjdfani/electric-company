@@ -19,6 +19,12 @@ class User(AbstractUser):
     address = models.TextField(verbose_name=_('Address'))
     api_key = models.CharField(max_length=200, verbose_name=_(
         'API key'), blank=True, null=True)
+    card_number = models.CharField(
+        max_length=16, verbose_name=_('Card number'), null=True, blank=True)
+    account_number = models.CharField(
+        max_length=20, verbose_name=_('Account number'), null=True, blank=True)
+    shaba_number = models.CharField(
+        max_length=30, verbose_name=_('Shaba number'), null=True, blank=True)
     USERNAME_FIELD = 'phone_number'
     REQUIRED_FIELDS = ['full_name']
     username = None
